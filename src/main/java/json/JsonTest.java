@@ -30,6 +30,11 @@ public class JsonTest {
             "            \"key1\": \"value1\",\n"+
             "            \"key2\": \"value2\"\n"+
             "        },\n" +
+            "    \"enum\": \n" +
+            "        [\n" +
+            "            \"enum1\",\n"+
+            "            \"enum2\"\n"+
+            "        ],\n" +
             "    \"row_group_size\": 134217728\n" +
             "}";
 
@@ -43,7 +48,14 @@ public class JsonTest {
 
         JSONObject pro = object.getJSONObject("properties");
         System.out.println(pro);
-        System.out.println(pro.getString("key1"));
+
+        for(Object key: pro.keySet()) {
+            String value = pro.get(key.toString()).toString();
+            System.out.println(key +" : " + value);
+        }
+
+        JSONArray array = object.getJSONArray("enum");
+        System.out.println("enum:   "+array);
 
         int row = object.getInt("row_group_size");
         System.out.println(row);
