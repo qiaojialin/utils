@@ -1,6 +1,7 @@
 package file;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,9 +31,11 @@ public class Write {
     }
 
     public static void main(String[] args) {
-        List<String> lines = Read.readFile("");
+//        List<String> lines = Read.readFile("");
 
-        String path = "";
+        List<String> lines = new ArrayList<>();
+        lines.add("adfsa");
+        String path = "src/main/resources/random_500_525600.csv";
         writeFile(path, lines);
     }
 }
