@@ -1,1 +1,0 @@
-curl --data '{"tag_name": "v0.1.0","target_commitish": "master","name": "v1.0.0","body": "Release of version 1.0.0","draft": false,"prerelease": false}' https://github.com/qiaojialin/utils/releases?access_token=:e6a55f6186a4a989c714b3efc8a7254056d13bf4
