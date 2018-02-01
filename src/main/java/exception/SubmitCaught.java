@@ -1,19 +1,15 @@
 package exception;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class SubmitCaught
 {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws InterruptedException {
         ExecutorService exec = Executors.newCachedThreadPool();
+        
         Future<?> future = exec.submit(new Task());
         exec.shutdown();
-        try
-        {
+        try {
             future.get();
         }
         catch (InterruptedException | ExecutionException e)
@@ -29,8 +25,10 @@ class Task implements Runnable
     @Override
     public void run()
     {
-        System.out.println(3/2);
-        System.out.println(3/0);
-        System.out.println(3/1);
+        int[] a = new int[10000000];
+
+//        System.out.println(3/2);
+//        System.out.println(3/0);
+//        System.out.println(3/1);
     }
 }
