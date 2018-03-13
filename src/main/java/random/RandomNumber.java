@@ -8,14 +8,16 @@ import java.util.Random;
 public class RandomNumber {
 
     public static void main(String[] args) {
-        Random random = new Random(10);
-        for(int i=0; i<10; i++) {
-            System.out.println(random.nextInt(100));
-        }
+        System.out.println(Math.round(Math.random()*180));
+        return;
+//        Random random = new Random(10);
+//        for(int i=0; i<10; i++) {
+//            System.out.println(random.nextInt(100));
+//        }
 
-        for(int i=0; i<10; i++) {
-            System.out.println(random.nextDouble());
-        }
+//        for(int i=0; i<10; i++) {
+//            System.out.println(random.nextDouble());
+//        }
     }
 
 }
