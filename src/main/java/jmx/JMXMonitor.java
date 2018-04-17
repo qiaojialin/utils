@@ -3,12 +3,12 @@ package jmx;
 import com.sun.management.OperatingSystemMXBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scale.convert.ConvertSize;
 
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -26,7 +26,6 @@ public class JMXMonitor {
         MBeanServerConnection mbs = connector.getMBeanServerConnection();
         opMXbean = ManagementFactory.newPlatformMXBeanProxy(mbs, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
     }
-
 
     /**
      * MemoryUsage 对象包含四个值：
@@ -56,13 +55,15 @@ public class JMXMonitor {
         long max = heapUsage.getMax();//内存最大量(byte)
         long commited = heapUsage.getCommitted();//已提交的内存量(byte)
 //        logger.info("memory: used:{}, max:{}", ConvertSize.getSize(used), ConvertSize.getSize(max));
-        return "used:" + ConvertSize.getSize(used) + " max:" + ConvertSize.getSize(max);
+        float gbFormat = used/((float)1024 * 1024 * 1024);
+        float precision2 = (float)(Math.round(gbFormat*100))/100;
+        return "used," + precision2 + ",GB";
     }
 
     public String monitorCpu() throws IOException {
         Long start = System.currentTimeMillis();
         long startT = opMXbean.getProcessCpuTime();
-        /**    Collect data every 5 seconds      */
+        /**    Collect data every 60 seconds      */
         try {
             TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
@@ -74,7 +75,35 @@ public class JMXMonitor {
         //endT - startT 为当前时间单元内cpu使用的时间，单位为ns
         double ratio = (endT-startT)/1000000.0/(end-start)/opMXbean.getAvailableProcessors();
 //        logger.info("cpu: {}", ratio);
-        return ratio + "";
+        double precision2 = (double) (Math.round(ratio*100))/100;
+        return "usage," + precision2;
+    }
+
+
+    public String monitorFileSize(String path) {
+        double size = getSize(new File(path));
+        float precision2 = (float)(Math.round(size*100))/100;
+        return "total," + precision2 + ",GB";
+    }
+
+
+    public double getSize(File file) {
+        //判断文件是否存在
+        if (file.exists()) {
+            //如果是目录则递归计算其内容的总大小，如果是文件则直接返回其大小
+            if (!file.isFile()) {
+                //获取文件大小
+                File[] fl = file.listFiles();
+                double ss = 0;
+                for (File f : fl)
+                    ss += getSize(f);
+                return ss;
+            } else {
+                return (double) file.length() / 1024 / 1024 / 1024;
+            }
+        } else {
+            return 0.0;
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -84,8 +113,16 @@ public class JMXMonitor {
         JMXConnector connector = JMXConnectorFactory.connect(serviceURL);
         //3、获取MemoryMXBean其中第二个参数为ObjectName，即为JConsole中看到的，也是固定值
         JMXMonitor jmxMonitor = new JMXMonitor(connector);
+
+        logger.info("memory: {}, file size: {}", jmxMonitor.monitorMemory(), jmxMonitor.monitorFileSize(args[0]));
+
         while (true) {
-            logger.info("memory: {}, cpu: {}", jmxMonitor.monitorMemory(), jmxMonitor.monitorCpu());
+            try {
+                TimeUnit.MINUTES.sleep(60);
+            } catch (InterruptedException e) {
+                logger.error("InterruptedException occurred while MemoryCollector sleeping...");
+            }
+            logger.info("memory: {}, cpu: {}, file size: {}", jmxMonitor.monitorMemory(), jmxMonitor.monitorCpu(), jmxMonitor.monitorFileSize(args[0]));
         }
     }
 
