@@ -10,15 +10,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * 聊天 服务器端
- * Created by tl on 17/3/1.
- */
+
 public class SocketServer {
     private int port = 9999;// 默认服务器端口
+    private String ip;
 
-
-    public SocketServer() {
+    public SocketServer(String ip) {
+        this.ip = ip;
     }
 
     // 创建指定端口的服务器
@@ -37,7 +35,7 @@ public class SocketServer {
                 Socket socket = server.accept();
                 i++;
                 System.out.println("第" + i + "个客户连接成功！");
-                new Thread(new ServerThread(socket, i)).start();
+                new Thread(new ServerThread(ip, socket, i)).start();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +43,9 @@ public class SocketServer {
     }
 
     public static void main(String[] args) {
-        new SocketServer().service();
+        if(args.length < 1)
+            System.out.println("need 1 arg: ip");
+        new SocketServer(args[0]).service();
     }
 }
 
@@ -58,10 +58,10 @@ class ServerThread implements Runnable {
     private Statement statement;
     private String insert = "insert into %s(timestamp,%s) values(%s,%s)";
 
-    public ServerThread(Socket socket, int i) throws ClassNotFoundException, SQLException {
-//        Class.forName(TsfileJDBCConfig.JDBC_DRIVER_NAME);
-//        connection = DriverManager.getConnection("jdbc:tsfile://192.168.130.151:6667/", "root", "root");
-//        statement = connection.createStatement();
+    public ServerThread(String ip, Socket socket, int i) throws ClassNotFoundException, SQLException {
+        Class.forName(TsfileJDBCConfig.JDBC_DRIVER_NAME);
+        connection = DriverManager.getConnection("jdbc:tsfile://" + ip + ":6667/", "root", "root");
+        statement = connection.createStatement();
         this.socket = socket;
         this.index = i;
     }
@@ -79,13 +79,17 @@ class ServerThread implements Runnable {
                 while (!((info = br.readLine()) == null)) {
                     System.out.println("第" + index + "个客户端发出消息：" + info);
                     String[] items = info.split(":");
-//                    statement.execute(String.format(insert, items[0], items[1], System.currentTimeMillis(), items[2]));
+                    if(items.length!=3)
+                        continue;
+                    String sql = String.format(insert, items[0], items[1], System.currentTimeMillis(), items[2]);
+                    System.out.println(sql);
+                    statement.execute(sql);
                 }
                 System.out.println("客户端断开连接");
 
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {// 建立连接失败的话不会执行socket.close();
+            } finally {
                 socket.close();
             }
         } catch (IOException e) {

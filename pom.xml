@@ -25,7 +25,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>socket.testReceive</mainClass>
+                  <mainClass>socket.SocketServer</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
@@ -74,6 +74,11 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_2.11</artifactId>
+      <version>2.0.0</version>
     </dependency>
     <dependency>
       <groupId>cn.edu.tsinghua</groupId>
