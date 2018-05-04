@@ -3,6 +3,7 @@ package thread;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Simple Java program to demonstrate How to use wait, notify and notifyAll()
@@ -10,10 +11,10 @@ import java.util.Random;
  *
  * @author Javin Paul
  */
-public class WaitNotifyAllTest {
+public class WaitAndNotifyAllTest {
     public static void main(String args[]) {
         Queue<Integer> buffer = new LinkedList<>(); //消息队列
-        int maxSize = 10;
+        int maxSize = 3;
         Thread producer = new Producer(buffer, maxSize, "PRODUCER");
         Thread consumer = new Consumer(buffer, maxSize, "CONSUMER");
         consumer.start();
@@ -46,11 +47,17 @@ class Producer extends Thread {
             synchronized (queue) {
                 while (queue.size() == maxSize) {
                     try {
-                        System.out.println("Queue is full, " + "Producer thread waiting for " + "consumer to take something from queue");
+                        System.out.println("Queue is full, " + "Producer thread is waiting");
                         queue.wait();
+                        System.out.println("Producer has been notified");
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 Random random = new Random();
                 int i = random.nextInt();
@@ -86,12 +93,18 @@ class Consumer extends Thread {
         while (true) {
             synchronized (queue) {
                 while (queue.isEmpty()) {
-                    System.out.println("Queue is empty," + "Consumer thread is waiting" + " for producer thread to put something in queue");
+                    System.out.println("Queue is empty," + "Consumer thread is waiting");
                     try {
                         queue.wait();
+                        System.out.println("Consumer has been notified");
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 System.out.println("Consuming value : " + queue.remove());
                 queue.notifyAll();
