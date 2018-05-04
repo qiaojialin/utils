@@ -9,14 +9,14 @@ public class MultiThreadStop {
     public static void main(String[] args) {
         executor = Executors.newFixedThreadPool(5);
         for(int i = 0; i < 5; i++) {
-            executor.submit(new MyThread());
+            executor.submit(new MyThread1());
         }
         executor.shutdown();
     }
 }
 
 
-class MyThread implements Runnable{
+class MyThread1 implements Runnable{
 
     @Override
     public void run() {

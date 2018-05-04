@@ -1,13 +1,12 @@
-package lock;
+package thread;
 
 import java.util.concurrent.CountDownLatch;
 
-public class Thread1 extends Thread
-{
 
+class MyThread2 extends Thread {
     private CountDownLatch count;
 
-    public Thread1(CountDownLatch count,String name)
+    public MyThread2(CountDownLatch count, String name)
     {
         this.count = count;
         this.setName(name);
@@ -21,10 +20,11 @@ public class Thread1 extends Thread
         System.out.println(this.getName() + " end...");
         this.count.countDown();
     }
+}
 
-    /**
-     * @param args
-     */
+public class CountDownLatchTest
+{
+
     public static void main(String[] args)
     {
         System.out.println("main thread starting...");
@@ -33,7 +33,7 @@ public class Thread1 extends Thread
 
         for (int i = 1; i <= 5; i++)
         {
-            Thread1 my = new Thread1(count, "Thread " + i);
+            MyThread2 my = new MyThread2(count, "Thread " + i);
             my.start();
         }
 

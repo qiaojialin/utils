@@ -1,6 +1,6 @@
-package lock;
+package thread;
 
-public class Threads {
+public class JoinTest {
     public  static  void  main (String[]  args ) {
         SubThread thread  =  new  SubThread () ;
 
