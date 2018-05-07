@@ -1,8 +1,8 @@
-package akka;
+package akka.example1;
 
 import akka.actor.AbstractActor;
-import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.actor.Terminated;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -13,29 +13,36 @@ import akka.event.LoggingAdapter;
  */
 public class Printer extends AbstractActor {
 
-    static public Props props() {
-        return Props.create(Printer.class, () -> new Printer());
+    private String name;
+    private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
+
+    static public Props props(String name) {
+        return Props.create(Printer.class, () -> new Printer(name));
     }
 
     //#printer-messages
     static public class Greeting {
         public final String message;
-
         public Greeting(String message) {
             this.message = message;
         }
     }
 
-    private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
-    public Printer() {
+
+    public Printer(String name) {
+        this.name = name;
     }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder()
                 .match(Greeting.class, greeting -> {
-                    log.info(greeting.message);
+                    log.info(name + ": "+ greeting.message);
+                })
+                .match(Terminated.class, terminated -> {
+                    log.info(name + ": I am killed");
+                    context().system().terminate();
                 })
                 .build();
     }

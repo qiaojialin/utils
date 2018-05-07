@@ -1,10 +1,10 @@
-package akka;
+package akka.example1;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
-import akka.Greeter.*;
-import akka.Printer.*;
+import akka.example1.Greeter.*;
+import akka.example1.Printer.*;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
-public class AkkaQuickstartTest {
+public class JunitTest {
     static ActorSystem system;
 
     @BeforeClass
