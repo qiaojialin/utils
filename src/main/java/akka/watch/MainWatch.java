@@ -1,4 +1,4 @@
-package akka.example2;
+package akka.watch;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -6,7 +6,10 @@ import akka.actor.PoisonPill;
 import akka.actor.Props;
 import com.typesafe.config.ConfigFactory;
 
-public class Main {
+/**
+ * Watch Actor观察myWork actor，当myWork actor挂掉后就停止系统
+ */
+public class MainWatch {
 
     public static void main(String[] args) {
         //创建ActorSystem。一般来说，一个系统只需要一个ActorSystem。
@@ -15,7 +18,7 @@ public class Main {
         ActorRef myWork = system.actorOf(Props.create(MyWork.class), "MyWork");
 
         //监听myWork，myWork挂了，自己也挂了
-        ActorRef watchActor = system.actorOf(Props.create(WatchActor.class, myWork), "WatchActor");
+        ActorRef watchActor = system.actorOf(Props.create(WatchActor.class, myWork), "SuperVisor");
 
         myWork.tell(MyWork.Msg.WORKING, ActorRef.noSender());
         myWork.tell(MyWork.Msg.DONE, ActorRef.noSender());

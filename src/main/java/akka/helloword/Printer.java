@@ -1,4 +1,4 @@
-package akka.example1;
+package akka.helloword;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
@@ -39,10 +39,7 @@ public class Printer extends AbstractActor {
         return receiveBuilder()
                 .match(Greeting.class, greeting -> {
                     log.info(name + ": "+ greeting.message);
-                })
-                .match(Terminated.class, terminated -> {
-                    log.info(name + ": I am killed");
-                    context().system().terminate();
+                    getSender().tell(Greeter.Msg.DOWN, getSelf());
                 })
                 .build();
     }

@@ -186,5 +186,6 @@
     <orderEntry type="library" name="Maven: org.apache.thrift:libthrift:0.9.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.9" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.35" level="project" />
   </component>
 </module>

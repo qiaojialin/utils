@@ -1,4 +1,4 @@
-package akka.example2;
+package akka.watch;
 
 import akka.actor.UntypedAbstractActor;
 import akka.event.Logging;

@@ -1,7 +1,7 @@
-package akka.example1;
+package akka.helloword;
 
 import akka.actor.*;
-import akka.example1.Printer.Greeting;
+import akka.helloword.Printer.Greeting;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
@@ -17,7 +17,6 @@ public class Greeter extends AbstractActor {
     private final ActorRef printerActor;
     private String greeting = "";
     private LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
-    private final ActorRef childPrinter = context().actorOf(Printer.props("child-printer"), "child-printer");
 
     public Greeter(String message, ActorRef printerActor) {
         this.name = message;
@@ -29,6 +28,7 @@ public class Greeter extends AbstractActor {
         return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
     }
 
+
     //#greeter-messages
     static public class WhoToGreet {
         public final String who;
@@ -38,21 +38,24 @@ public class Greeter extends AbstractActor {
         }
     }
 
+
     //#greeter-messages
     static public class Greet {
         public Greet() {
         }
     }
 
+    public static enum Msg {
+        DOWN
+    }
+
     @Override
     public void preStart() {
-        log.info(name + ": I am birth");
-        getContext().watch(childPrinter);
-        childPrinter.tell(new Greeting("preStart"), getSelf());
+        log.info(name + ": preStart");
     }
 
     public void postStop() {
-        log.info(name + ": I am down");
+        log.info(name + ": postStop");
     }
 
 
@@ -65,6 +68,11 @@ public class Greeter extends AbstractActor {
                 .match(Greet.class, x -> {
                     //#greeter-send-name
                     printerActor.tell(new Greeting(greeting), getSelf());
+                })
+                .matchEquals(Msg.DOWN, o -> {
+                    log.info("I am down");
+                    getContext().stop(getSelf());
+                    getContext().system().terminate();
                 })
                 .build();
     }

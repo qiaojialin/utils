@@ -1,10 +1,10 @@
-package akka.example1;
+package akka.helloword;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
-import akka.example1.Greeter.*;
-import akka.example1.Printer.*;
+import akka.helloword.Greeter.*;
+import akka.helloword.Printer.*;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
