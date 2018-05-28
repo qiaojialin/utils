@@ -3,8 +3,10 @@ package io;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
 
+/**
+ * 将所有字节缓冲进去
+ */
 public class ByteArrayOutputStreamTest {
 
     public static void main(String[] args) throws IOException {
@@ -34,8 +36,7 @@ public class ByteArrayOutputStreamTest {
 
         byte[] ret = total.toByteArray();
         for (int i = 0; i < ret.length; i++) {
-            System.out.println(ret[i]);
-            assertEquals(i, ret[i]);
+            System.out.print(ret[i]);
         }
 
     }
