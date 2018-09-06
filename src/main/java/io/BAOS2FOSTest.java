@@ -14,16 +14,17 @@ public class BAOS2FOSTest {
         if (file.exists())
             file.delete();
 
+        // 向 ByteArrayOutputStream 中写 3 个字节
         byte[] b1 = new byte[]{0, 1, 2};
-        ByteArrayOutputStream s1 = new ByteArrayOutputStream();
-        s1.write(b1);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.write(b1);
 
+        // 将 ByteArrayOutputStream 缓存的数据写入 FileOutputStream 中，即写入文件中
         FileOutputStream fileOutputStream = new FileOutputStream(file, false);
-        s1.writeTo(fileOutputStream);
-        s1.flush();
-        s1.close();
-
+        baos.writeTo(fileOutputStream);
         read();
+
+        fileOutputStream.close();
 
         file.delete();
     }
