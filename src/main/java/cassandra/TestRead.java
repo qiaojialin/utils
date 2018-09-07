@@ -1,6 +1,5 @@
 package cassandra;
 
-import cn.edu.thu.storage.Config;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 
@@ -20,8 +19,7 @@ public class TestRead {
         File f = new File("src/main/resources/micapsdata86.csv");
         FileWriter writer = new FileWriter(f, true);
 
-        Config.cassandra_nodes = "192.168.3.51,192.168.3.52,192.168.3.53,192.168.3.54";
-        CassandraCluster cluster = CassandraCluster.getInstance();
+        CassandraCluster cluster = CassandraCluster.getInstance("192.168.3.51,192.168.3.52,192.168.3.53,192.168.3.54");
 
         ResultSet rSet = null;
 

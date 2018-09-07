@@ -20,7 +20,7 @@ public class CassandraCluster {
     // one cluster for per physical
     private Cluster cluster;
     // one session for per ks
-    private Session session;
+    public Session session;
 
     private static String dropKsCql= "DROP KEYSPACE IF EXISTS %s;";
     private static String createKsCql = "CREATE KEYSPACE IF NOT EXISTS %s WITH replication = {'class':'%s', 'replication_factor':%d};";
