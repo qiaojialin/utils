@@ -23,28 +23,29 @@ public class Read {
         int i = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(srcFile));
-            String str;
-            Map<String, List<String>> sensor_device = new HashMap<>();
-            while ((str = bufferedReader.readLine()) != null) {
 
-                String[] sensors = str.split("#")[1].split(",");
-                String[] devices = str.split("#")[0].split(",");
+            String str = bufferedReader.readLine();
 
-                for(String device: devices)
-                    for(String sensor: sensors) {
-                        if(!sensor_device.containsKey(sensor))
-                            sensor_device.put(sensor, new ArrayList<String>());
-                        sensor_device.get(sensor).add(device);
-                        i++;
-                    }
+            String[] item = str.split("\t");
+            System.out.println(item.length);
+
+            List<Long> day_num = new ArrayList<>();
+
+            long num = 0;
+            for(i = 0; i < item.length; i++) {
+                num += Integer.valueOf(item[i].trim());
+//                if(i != 0 && i % 144 == 0) {
+//                    day_num.add(num);
+//                    num = 0;
+//                }
             }
+            System.out.println(num);
 
-            for(Map.Entry<String, List<String>> entry: sensor_device.entrySet()) {
-                String sensor = entry.getKey();
-                for(String device: entry.getValue()) {
-                    System.out.println(device + "#" + sensor);
-                }
-            }
+            System.out.println(day_num);
+
+//            while ((str = bufferedReader.readLine()) != null) {
+//            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,6 +55,9 @@ public class Read {
     }
 
     public static void main(String[] args) {
-        readFile("/Users/qiaojialin/Desktop/fujian_timeseries.txt");
+//        readFile("/Users/qiaojialin/Desktop/disorder");
+
+        System.out.println(Integer.MAX_VALUE);
     }
+
 }

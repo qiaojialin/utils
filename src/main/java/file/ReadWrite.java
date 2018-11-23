@@ -1,8 +1,7 @@
 package file;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by qiaojialin on 2017/6/4.
@@ -10,10 +9,13 @@ import java.util.List;
 public class ReadWrite {
 
     public static void readWrite(String src, String dest) {
-        src = "/Users/qiaojialin/Desktop/data_t.csv";
-        dest = "/Users/qiaojialin/Desktop/data_t_qjl.csv";
+        src = "/Users/qiaojialin/Desktop/replica-qxj.csv";
+        dest = "/Users/qiaojialin/Desktop/replica-qxj-reorder.csv";
         File srcFile = new File(src);
         File destFile = new File(dest);
+
+        List<Line> sorter = new ArrayList<>();
+
         FileWriter writer;
         try {
             writer = new FileWriter(destFile, false);
@@ -23,91 +25,23 @@ public class ReadWrite {
             while ((str = bufferedReader.readLine()) != null) {
                 i ++;
                 String[] items = str.split(",");
-                List<String> result = new ArrayList<>();
-                int count = 0;
-                float sum = 0;
-                for(int j = 2; j < items.length; j++) {
-                    if(!items[j].equals("")) {
-                        sum += Float.parseFloat(items[j]);
-                        count ++;
-                    }
-                }
-
-                float avg = sum / count;
-                float maxcha1 = 0;
-                int maxchaIndex1 = 0;
-                float maxcha2 = 0;
-                int maxchaIndex2 = 0;
-
-                for(int j = 2; j < items.length; j++) {
-                    if(!items[j].equals("")) {
-                        float cha = Math.abs(Float.parseFloat(items[j]) - avg);
-                        if(cha >= maxcha1) {
-                            maxcha2 =maxcha1;
-                            maxchaIndex2 = maxchaIndex1;
-                            maxcha1 = cha;
-                            maxchaIndex1 = j;
-                        } else if(cha >= maxcha2) {
-                            maxcha2 = cha;
-                            maxchaIndex2 = j;
-                        }
-                    }
-                }
-
-                sum = 0;
-                count = 0;
-                for(int j = 2; j < items.length; j++) {
-                    if(!items[j].equals("") && j != maxchaIndex1 && j != maxchaIndex2) {
-                        sum += Float.parseFloat(items[j]);
-                        count ++;
-                    }
-                }
-
-                avg = sum / count;
-                double sigma = 0;
-                for(int j = 2; j < items.length; j++) {
-                    if(!items[j].equals("") && j != maxchaIndex1 && j != maxchaIndex2) {
-                        double value = Double.parseDouble(items[j]);
-                        sigma += (value - avg)*(value - avg);
-                    }
-                }
-                sigma = Math.sqrt(sigma/count);
-
-                boolean flag = true;
-                StringBuilder builder = new StringBuilder();
-                for(int j = 2; j < items.length; j++) {
-                    if(!items[j].equals("")) {
-                        double value = Double.parseDouble(items[j]);
-                        if(Math.abs(value - avg) > 3 * sigma) {
-                            if(flag) {
-                                flag = false;
-                                builder.append(value);
-                            } else {
-                                builder.append("," + value);
-                            }
-                        }
-                    }
-                }
-
-
-
-//                StringBuilder stringBuilder = new StringBuilder();
-//                boolean flag = true;
-//                for(String a: result) {
-//                    if(flag) {
-//                        stringBuilder.append(a);
-//                        flag = false;
-//                    } else {
-//                        stringBuilder.append("," + a);
-//                    }
-//                }
-//                System.out.println(stringBuilder.toString());
-//                if(i % 100 == 0) {
-//                    System.out.println(str);
-                    writer.write(builder.toString());
-                    writer.write("\n");
-//                }
+                sorter.add(new Line(items[0], items[1], items[2], items[3], items[4], i));
             }
+
+            Collections.sort(sorter);
+            System.out.println(i);
+            System.out.println(sorter.size());
+
+            i = 0;
+            Iterator iterator = sorter.iterator();
+            while (iterator.hasNext()) {
+                i++;
+                String tmp = iterator.next().toString();
+                writer.write(tmp);
+                writer.write("\n");
+            }
+            System.out.println(i);
+
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,4 +53,46 @@ public class ReadWrite {
         readWrite("", "");
     }
 
+}
+
+class Line implements Comparable<Line>{
+
+    double tonggou;
+    double yigou;
+    double down1;
+    double down2;
+    double down3;
+    int suijishu;
+
+    public Line(String tonggou, String yigou, String down1, String down2, String down3, int i) {
+        this.tonggou = Double.valueOf(tonggou);
+        this.yigou = Double.valueOf(yigou);
+        this.down1 = Double.valueOf(down1);
+        this.down2 = Double.valueOf(down2);
+        this.down3 = Double.valueOf(down3);
+        this.suijishu = i;
+    }
+
+    public Line(double tonggou, double yigou, double down1, double down2, double down3) {
+        this.tonggou = tonggou;
+        this.yigou = yigou;
+        this.down1 = down1;
+        this.down2 = down2;
+        this.down3 = down3;
+    }
+
+    @Override
+    public int compareTo(Line o) {
+        return Double.compare(o.tonggou, tonggou);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return tonggou + ", " + yigou + "," + down1 + "," + down2 + "," + down3;
+    }
 }
