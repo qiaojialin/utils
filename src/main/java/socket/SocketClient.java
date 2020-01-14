@@ -13,8 +13,14 @@ public class SocketClient {
     public static void main(String[] args) throws IOException {
         try {
             // 1、创建客户端Socket，指定服务器地址和端口
-            // Socket socket=new Socket("127.0.0.1",5200);
-            Socket socket = new Socket("127.0.0.1", 9999);
+             Socket socket=new Socket("127.0.0.1",5200);
+//            Socket socket = new Socket("www.baidu.com", 9999);
+
+            System.out.println(socket.getLocalAddress());
+            System.out.println(socket.getLocalPort());
+            System.out.println(socket.getInetAddress());
+
+            socket.getLocalAddress();
             System.out.println("客户端启动成功");
             // 2、获取输出流，向服务器端发送信息
             // 向本机的52000端口发出客户请求
@@ -23,6 +29,10 @@ public class SocketClient {
             // 由Socket对象得到输出流，并构造PrintWriter对象
             //3、获取输入流，并读取服务器端的响应信息
             // 由Socket对象得到输入流，并构造相应的BufferedReader对象
+            write.println("aaaaaaaa");
+            // 将从系统标准输入读入的字符串输出到Server
+            write.flush();
+
             write.println("aaaaaaaa");
             // 将从系统标准输入读入的字符串输出到Server
             write.flush();

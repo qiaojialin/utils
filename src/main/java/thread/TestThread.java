@@ -1,10 +1,15 @@
 package thread;
 
+import org.apache.iotdb.session.IoTDBSessionException;
+import org.apache.iotdb.session.Session;
+
 public class TestThread {
     public static void main(String[] args) {
         System.out.println("main thread starts");
-        FactorialThread thread = new FactorialThread(10);
-        thread.start();    //将自动进入run()方法
+        for (int i = 0; i < 100; i++) {
+            FactorialThread thread = new FactorialThread(i);
+            thread.start();
+        }
         System.out.println("main thread ends ");
     }
 }
@@ -18,8 +23,18 @@ class FactorialThread extends Thread {
     }
 
     public void run() {
-        System.out.println("new thread starts");
+        Session session = new Session("127.0.0.1", 6667, "root", "root");
+        try {
+            session.open();
+        } catch (IoTDBSessionException e) {
+            e.printStackTrace();
+        }
+        try {
+            session.close();
+        } catch (IoTDBSessionException e) {
+            e.printStackTrace();
+        }
         System.out.println(Thread.currentThread().getName() + ": "+ num);
-        System.out.println("new thread ends");
+
     }
 }

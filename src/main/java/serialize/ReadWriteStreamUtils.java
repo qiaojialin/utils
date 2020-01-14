@@ -1,6 +1,5 @@
 package serialize;
 
-import cn.edu.tsinghua.tsfile.common.utils.BytesUtils;
 
 import java.io.*;
 import java.util.List;

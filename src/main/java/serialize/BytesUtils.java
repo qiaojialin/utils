@@ -1,6 +1,6 @@
 package serialize;
 
-import cn.edu.tsinghua.tsfile.common.conf.TSFileConfig;
+import org.apache.iotdb.tsfile.common.conf.TSFileConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class BytesUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(cn.edu.tsinghua.tsfile.common.utils.BytesUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BytesUtils.class);
 
     /**
      * integer convert to byte[4]
@@ -700,7 +700,7 @@ public class BytesUtils {
      */
     public static double readDouble(InputStream in) throws IOException {
         byte[] b = safeReadInputStreamToBytes(8, in);
-        return cn.edu.tsinghua.tsfile.common.utils.BytesUtils.bytesToDouble(b);
+        return BytesUtils.bytesToDouble(b);
     }
 
     /**
@@ -712,7 +712,7 @@ public class BytesUtils {
      */
     public static float readFloat(InputStream in) throws IOException {
         byte[] b = safeReadInputStreamToBytes(4, in);
-        return cn.edu.tsinghua.tsfile.common.utils.BytesUtils.bytesToFloat(b);
+        return BytesUtils.bytesToFloat(b);
     }
 
     /**
@@ -724,7 +724,7 @@ public class BytesUtils {
      */
     public static boolean readBool(InputStream in) throws IOException {
         byte[] b = safeReadInputStreamToBytes(1, in);
-        return cn.edu.tsinghua.tsfile.common.utils.BytesUtils.bytesToBool(b);
+        return BytesUtils.bytesToBool(b);
     }
 
     /**
@@ -736,7 +736,7 @@ public class BytesUtils {
      */
     public static int readInt(InputStream in) throws IOException {
         byte[] b = safeReadInputStreamToBytes(4, in);
-        return cn.edu.tsinghua.tsfile.common.utils.BytesUtils.bytesToInt(b);
+        return BytesUtils.bytesToInt(b);
     }
 
     /**
@@ -748,7 +748,7 @@ public class BytesUtils {
      */
     public static long readLong(InputStream in) throws IOException {
         byte[] b = safeReadInputStreamToBytes(8, in);
-        return cn.edu.tsinghua.tsfile.common.utils.BytesUtils.bytesToLong(b);
+        return BytesUtils.bytesToLong(b);
     }
 
     /**

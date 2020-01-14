@@ -10,7 +10,6 @@ import java.util.Set;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ColumnDefinitions.Definition;
 
-import cn.edu.tsinghua.iotdb.jdbc.TsfileJDBCConfig;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -53,8 +52,8 @@ public class Cassandra_CQL_data {
 
 
             try {
-                Class.forName(TsfileJDBCConfig.JDBC_DRIVER_NAME);
-                Connection connection = DriverManager.getConnection("jdbc:tsfile://192.168.10.57:6667/", "root", "root");
+                Class.forName("org.apache.iotdb.jdbc.IoTDBDriver");
+                Connection connection = DriverManager.getConnection("jdbc:iotdb://192.168.10.57:6667/", "root", "root");
                 Statement statement = connection.createStatement();
                 int batch_count = 0;
                 long total = 0;

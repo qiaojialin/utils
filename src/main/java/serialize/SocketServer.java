@@ -1,16 +1,20 @@
-package socket;
+package serialize;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.apache.iotdb.jdbc.*;
+//import org.apache.iotdb.jdbc.Config;
+
 
 /**
- * 树莓派socket服务器
+ * 自动驾驶汽车
  */
 public class SocketServer {
     private int port = 9999;// 默认服务器端口
@@ -58,11 +62,11 @@ class ServerThread implements Runnable {
 
     private Connection connection;
     private Statement statement;
-    private String insert = "insert into %s(timestamp,%s) values(%s,%s)";
+    private String insert = "insert into root.car(timestamp,gyro_x,gyro_y,gyro_z,acce_x,acce_y,acce_z,Temperature) values(%s,%s,%s,%s,%s,%s,%s,%s)";
 
     public ServerThread(String ip, Socket socket, int i) throws ClassNotFoundException, SQLException {
-        Class.forName("org.apache.iotdb.jdbc.IoTDBDriver");
-        connection = DriverManager.getConnection("org.apache.iotdb.jdbc.IoTDBDriver" + ip + ":6667/", "root", "root");
+//        Class.forName(Config.JDBC_DRIVER_NAME);
+//        connection = DriverManager.getConnection(Config.IOTDB_URL_PREFIX + ip + ":6667/", "root", "root");
         statement = connection.createStatement();
         this.socket = socket;
         this.index = i;
@@ -78,15 +82,21 @@ class ServerThread implements Runnable {
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 //4.读取用户输入信息
                 String info = null;
+                long i = 0;
                 while (!((info = br.readLine()) == null)) {
+                    i++;
+                    if(i % 100 != 0) {
+                        continue;
+                    }
                     System.out.println("第 " + index + " 个客户端发出消息：" + info);
                     /**
-                     * root.d1:s1:0.2
+                     * TimeTag:1:2:3:4:5:6:7
                      */
                     String[] items = info.split(":");
-                    if(items.length!=3)
+                    if(items.length!=8)
                         continue;
-                    String sql = String.format(insert, items[0], items[1], System.currentTimeMillis(), items[2]);
+                    String sql = String.format(insert, System.currentTimeMillis(), items[1], items[2], items[3],
+                        items[4], items[5], items[6], items[7]);
                     System.out.println(sql);
                     statement.execute(sql);
                 }
